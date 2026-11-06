@@ -1,0 +1,10 @@
+import {readFile,writeFile} from 'node:fs/promises';
+const base=new URL('../public/',import.meta.url);
+let html=await readFile(new URL('index.html',base),'utf8');
+const css=await readFile(new URL('styles.css',base),'utf8');
+const motion=(await readFile(new URL('motion.js',base),'utf8')).replace('export function initMotion','function initMotion');
+const app=(await readFile(new URL('app.js',base),'utf8')).replace(/import \{ initMotion \} from '\.\/motion.js';/,'');
+const mark='data:image/svg+xml;base64,'+Buffer.from(await readFile(new URL('assets/mark.svg',base))).toString('base64');
+html=html.replace(/  <link[^>]*fonts[^>]*>\n/g,'').replace('<link rel="stylesheet" href="/styles.css">',()=>'<style>'+css+'</style>').replace('  <script type="module" src="/app.js"></script>','').replaceAll('/assets/mark.svg',mark).replace('</body>',()=>'<script>(()=>{'+motion+'\n'+app+'})();</script></body>');
+await writeFile(new URL('../portfolio.html',import.meta.url),html);
+console.log('Built site/portfolio.html — no external assets or network requests');
