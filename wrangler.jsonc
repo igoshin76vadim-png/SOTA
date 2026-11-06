@@ -1,0 +1,8 @@
+{
+  "name": "my-landing",
+  "compatibility_date": "2026-11-06",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./site/public"
+  }
+}
